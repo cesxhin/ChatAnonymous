@@ -69,8 +69,7 @@ export default {
     },
     created() {
         console.log("Starting connection to WebSocket Server");
-        this.connection = new WebSocket("wss://6b2d-151-36-151-175.ngrok.io/chat");
-        console.log(process.env)
+        this.connection = new WebSocket(process.env.VUE_APP_IP_SOCKET);
     },
     mounted(){
       //sockets

@@ -12,6 +12,7 @@
   "dependencies": {
     "@hapi/basic": "^6.0.0",
     "@hapi/hapi": "^20.2.1",
+    "dotenv": "^16.0.0",
     "hapi-plugin-websocket": "^2.3.7",
     "uuid": "^8.3.2",
     "ws": "^8.5.0"
