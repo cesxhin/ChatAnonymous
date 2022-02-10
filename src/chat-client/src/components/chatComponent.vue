@@ -42,8 +42,7 @@ import messageComponent from "./messageComponent.vue"
                 {
                     alert('Non hai selezionato nessun contatto!')
                     return
-                }else if(this.body.length <= 0){
-                    alert('Non hai inserito nessun messaggio!')
+                }else if(this.body.length <= 0 || this.body.match(/^ *$/) !== null){
                     return
                 }
                 const data = {

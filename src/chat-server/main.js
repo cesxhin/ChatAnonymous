@@ -2,16 +2,20 @@ const Boom          = require("@hapi/boom")
 const HAPI          = require("@hapi/hapi")
 const WebSocket     = require('ws');
 const uuid          = require('uuid');
+require('dotenv').config();
 ;(async () => {
     /*  create new HAPI service  */
     //const server = new HAPI.Server({ address: "localhost", port: 12345 })
-
     //socket
     const wss = new WebSocket.Server({
-        port: 12345,
-        host: "localhost",
-        path: "/chat"
+        port: process.env.PORT,
+        host: process.env.HOST,
+        path: process.env.PATH_URL
     });
+    console.log("Settings:")
+    console.log("Host: "+wss.options.host);
+    console.log("Port: "+wss.options.port);
+    console.log("Path: "+wss.options.path);
     const clients = new Map();
 
     //id_chats
