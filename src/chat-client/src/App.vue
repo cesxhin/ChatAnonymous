@@ -5,8 +5,8 @@
         <div class="text-center">
           <h1>Chat</h1>
         </div>
-        <h3>your nickname: {{getNickname}}</h3>
-        <h3>your id: {{getId}}</h3>
+        <h3>Nickname: {{getNickname}}</h3>
+        <h3>Your ID: {{getId}}</h3>
       </div>
       <template class="bar" v-if="showContacts == false">
         <input type="text" class="me-2" v-model="RegistrationNickname" placeholder="nickname...">
@@ -69,7 +69,8 @@ export default {
     },
     created() {
         console.log("Starting connection to WebSocket Server");
-        this.connection = new WebSocket("ws://localhost:12345/chat");
+        this.connection = new WebSocket("wss://6b2d-151-36-151-175.ngrok.io/chat");
+        console.log(process.env)
     },
     mounted(){
       //sockets
