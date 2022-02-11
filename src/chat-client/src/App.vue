@@ -91,19 +91,15 @@ export default {
             //show contacts
             VuexStore.dispatch('doneRegistration')
 
-          }else if(dataJson.action === 'newContact')
-          {            
-            //new contact
-            VuexStore.dispatch('newContacts', dataJson.chatClients)
-            console.log("new contacts!")
-
           }else if(dataJson.action === 'receive'){
             console.log('new message for me')
             VuexStore.dispatch('putChatMessages', dataJson.data)
-          }else if(dataJson.action === 'deleteContact')
-          {
-            console.log('delete this id: '+dataJson.id)
-            VuexStore.dispatch('deleteContact', dataJson.id)
+          }else if(dataJson.action === 'UpdateRoom'){
+            console.log(dataJson.room);
+            VuexStore.dispatch('UpdateRoom', dataJson.room)
+          }else if(dataJson.action === 'deleteContactFromRoom'){
+            console.log(dataJson);
+            VuexStore.dispatch('deleteContactFromRoom', dataJson.id)
           }
       };
 

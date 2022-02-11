@@ -23,8 +23,8 @@ export default createStore({
     id : null,
     nickname: null,
     idContactCurrent:null,
-    clients: [],
-    chats:[]
+    chats:[],
+    room:null
   },
   
   mutations: {
@@ -35,8 +35,8 @@ export default createStore({
       state.id = data.id
       state.nickname = data.nickname
     },
-    UPDATE_CONTACTS(state, newClients){
-      state.clients = newClients
+    UPDATE_ROOM(state, room){
+      state.room = room
     },
     PUT_CHAT_MESSAGES(state, data){
       var foundIdContact = false
@@ -96,22 +96,19 @@ export default createStore({
     {
       state.idContactCurrent = idContact
     },
-    DELETE_CONTACT(state, idContact){
+    DELETE_CONTACT_ROOM(state, idContact){
       if(state.idContactCurrent === idContact)
         state.idContactCurrent = null
-      
-      //delete form list contacts
-      var pos = 0;
-      state.clients.forEach(item => {
-        if(item.id === idContact)
-        {
-            state.clients.splice(pos, 1); 
+
+      //delete room
+      state.room.clients.find((client, index)=>{
+        if(client != undefined && client.id === idContact){
+          state.room.clients.splice(index, 1)
         }
-        ++pos
       })
 
       //delete from chats
-      pos = 0
+      var pos = 0
       state.chats.forEach(item => {
         if(item.id === idContact)
         {
@@ -128,9 +125,6 @@ export default createStore({
     setAccount(context, data){
       context.commit('SET_ACCOUNT', data)
     },
-    newContacts(context, newClients){
-      context.commit('UPDATE_CONTACTS', newClients)
-    },
     putChatMessages(context, data){
       context.commit('PUT_CHAT_MESSAGES', data)
     },
@@ -140,8 +134,11 @@ export default createStore({
     putChatMessagesSelf(context, data){
       context.commit('PUT_CHAT_MESSAGES_SELF', data)
     },
-    deleteContact(context, id){
-      context.commit('DELETE_CONTACT', id)
+    UpdateRoom(context, room){
+      context.commit('UPDATE_ROOM', room)
+    },
+    deleteContactFromRoom(context, id){
+      context.commit('DELETE_CONTACT_ROOM', id)
     }
   },
   modules: {
@@ -157,7 +154,7 @@ export default createStore({
       return state.nickname;
     },
     getClients(state){
-      return state.clients;
+      return state.room.clients;
     },
     getIdContactCurrent(state){
       return state.idContactCurrent;
