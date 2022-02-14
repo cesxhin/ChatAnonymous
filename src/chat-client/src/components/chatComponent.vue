@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
+    <div class="form">
         <div>
             chat di {{idContact}}
         </div>
-        <div class="overflow-auto" style="display: flex;flex-direction: column-reverse;position:fixed;bottom:35%;max-height: 300px;width: 50%;">
+        <div class="messages">
             <template v-if="chat != null">
                 <div style="flex-direction: column;">
                     <div v-for="message in chat.messages" :key="message.id">
@@ -12,12 +12,26 @@
                 </div>
             </template>
         </div>
-        <div class="d-flex"  style="position:fixed;bottom:30%;width: 50%;">
+        <div class="d-flex">
             <input v-model="body" @keypress="keyHandler($event)" class="form-control me-2" type="text" placeholder="Text...">
             <button @click="sendMessage" class="btn btn-outline-success">Send</button>
       </div>
     </div>
 </template>
+<style>
+.form{
+    max-width: 100%;
+    margin: 10px 10px;
+}
+.messages{
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    bottom:35%;
+    height: 300px;
+    margin-bottom: 5px;
+}
+</style>
 <script>
 import messageComponent from "./messageComponent.vue"
     export default {

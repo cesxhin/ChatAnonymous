@@ -35,6 +35,7 @@
 <style>
 .flex{
     display: flex;
+    flex-wrap: nowrap;
 }
 .message-time{
     font-family: Arial, Helvetica, sans-serif;

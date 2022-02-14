@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="">
     <div class="background">
       <div class="title">
         <div class="text-center">
@@ -14,16 +14,16 @@
       </template>
       <template v-else-if="showContacts == true">
         <hr>
-        <div class="row">
+        <div class="flex">
           <template v-if="getClients.length > 1">
-            <div class="col-4">
+            <div class="list-contacts">
               <div class="list-group" id="list-tab" role="tablist" v-for="chat in getClients" :key="chat.id">
                 <template v-if="chat.id !== getId">
                   <rowChat :nicknameContact="chat.nickname" :idContact="chat.id" :idContactCurrent="getIdContactCurrent"/>
                 </template>
               </div>
             </div>
-            <div class="col-8">
+            <div class="chat-contact">
               <chat :idContact="getIdContactCurrent" :chat="getChatById" :id="getId"/>
             </div>
           </template>
@@ -37,6 +37,22 @@
     </div>
   </div>
 </template>
+
+<style>
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+}
+.list-contacts{
+  width: 30%;
+  min-width: 100px;
+}
+
+.chat-contact{
+  width: 70%;
+  min-width: 300px;
+}
+</style>
 
 <script>
 //library
