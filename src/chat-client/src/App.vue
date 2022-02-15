@@ -1,16 +1,27 @@
 <template>
-  <div class="">
+  <div>
     <div class="background">
       <div class="title">
-        <div class="text-center">
-          <h1>Chat</h1>
-        </div>
-        <h3>Nickname: {{getNickname}}</h3>
-        <h3>Your ID: {{getId}}</h3>
+        <h3 style="word-wrap: break-word;">🧍 {{getNickname}}</h3>
+        <hr>
+        <h3>🗝️ {{getId}}</h3>
       </div>
       <template class="bar" v-if="showContacts == false">
-        <input type="text" class="me-2" v-model="RegistrationNickname" placeholder="nickname...">
-        <button @click="sendRegistration" class="btn btn-primary">Registration</button>
+        <div class="registration">
+          <div>
+            <h2>Chat Anonymous</h2>
+            <h3>Perchè è diverso dagli altri?</h3>
+            <p>
+              Puoi chattare al massimo 5 persone contemporanamente, una volta che sei uscito
+              oppure la persona con cui stai scrivendo è uscita, la chat verrà cancellata senza lasciare
+              nessuna traccia
+            </p>
+          </div>
+          <div class="input-group">
+            <input type="text" class="form-control" v-model="RegistrationNickname" placeholder="Username...">
+            <button @click="sendRegistration"  class="btn btn-outline-primary" type="button" id="button-addon2">Registration</button>
+          </div>
+        </div>
       </template>
       <template v-else-if="showContacts == true">
         <hr>
@@ -28,8 +39,8 @@
             </div>
           </template>
           <template v-else>
-            <div class="container">
-              Non c'è nessuno! Aspetta!
+            <div class="container text-center">
+              <h4>Sei da solo...aspetta qualcosa che si unisca con te!</h4>
             </div>
           </template>
         </div>
@@ -51,6 +62,14 @@
 .chat-contact{
   width: 70%;
   min-width: 300px;
+}
+
+.registration{
+  margin: 0% 30%;
+  padding: 10px;
+  background-color: rgb(235, 245, 223);
+  border-radius: 10px;
+  text-align: center;
 }
 </style>
 

@@ -8,7 +8,7 @@
                 {{time}}
             </div>
         </div>
-    </template>
+    </template> 
     <template v-else>
         <div class="container flex" style="justify-content: flex-start;">
             <div class="message-time">
@@ -45,7 +45,9 @@
 .message{
     font-family: Arial, Helvetica, sans-serif;
     font-size: large;
-    max-width: 300px;
+    color: white;
+    max-width: 500px;
+    min-width: 10px;
     margin: 5px;
     padding-left: 5px;
     padding-right: 5px;
@@ -53,10 +55,10 @@
     word-wrap: break-word;
 }
 .right{
-    background-color: darkseagreen;
+    background-color: rgb(111, 134, 149);
     text-align: end;
 }
 .left{
-    background-color: gainsboro;
+    background-color: rgb(111, 154, 149);
 }
 </style>

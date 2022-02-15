@@ -21,7 +21,10 @@
 <style>
 .form{
     max-width: 100%;
-    margin: 10px 10px;
+    margin: 0px 10px;
+    background-color: rgb(235, 245, 223);
+    border-radius: 10px;
+    padding: 10px;
 }
 .messages{
     overflow: auto;

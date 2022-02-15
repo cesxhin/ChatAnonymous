@@ -101,6 +101,7 @@ require('dotenv').config();
 
         ws.on("close", () => {
             var id = clients.get(ws)
+
             //find id room
             var id_room_client = null
             for(var i=0; i<rooms.length; i++)
@@ -115,6 +116,7 @@ require('dotenv').config();
 
             //get class room
             const room = rooms.find(element => element.id_room === id_room_client)
+
             room.clients.forEach(item =>{
                 const ws = [...clients].find(([key, val]) => val == item.id)[0]
                 const find = room.clients.find(element => element.id !== id) || null
@@ -133,12 +135,20 @@ require('dotenv').config();
                     }
                 })
             })
+
+            //delete room if aren't contacts
+            for(var i=0; i<rooms.length; i++)
+            {
+                if(rooms[i].clients.length == 0){
+                    rooms.slice(i, 1)
+                }
+            }
             //remove client
             clients.delete(ws);
 
             console.log(rooms)
             console.log(clients);
-          });
+        });
     })
     /*  start the HAPI service  */
     //await server.start()
