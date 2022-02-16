@@ -113,34 +113,37 @@ require('dotenv').config();
                         break
                     }
             }
-
-            //get class room
-            const room = rooms.find(element => element.id_room === id_room_client)
-
-            room.clients.forEach(item =>{
-                const ws = [...clients].find(([key, val]) => val == item.id)[0]
-                const find = room.clients.find(element => element.id !== id) || null
-
-                //send clients that one client is closed
-                if(find != null)
-                    ws.send(JSON.stringify({action: 'deleteContactFromRoom', id}))
-            })
-
-            //delete client
-            rooms.forEach((room )=>{
-                room.clients.find((client, index)=>{
-                    if(client != undefined && client.id === id)
-                    {
-                        room.clients.splice(index, 1);
-                    }
-                })
-            })
-
-            //delete room if aren't contacts
-            for(var i=0; i<rooms.length; i++)
+            //if this user not exist in rooms
+            if(id_room_client != undefined)
             {
-                if(rooms[i].clients.length == 0){
-                    rooms.slice(i, 1)
+                //get class room            
+                const room = rooms.find(element => element.id_room === id_room_client)
+
+                room.clients.forEach(item =>{
+                    const ws = [...clients].find(([key, val]) => val == item.id)[0]
+                    const find = room.clients.find(element => element.id !== id) || null
+
+                    //send clients that one client is closed
+                    if(find != null)
+                        ws.send(JSON.stringify({action: 'deleteContactFromRoom', id}))
+                })
+
+                //delete client
+                rooms.forEach((room )=>{
+                    room.clients.find((client, index)=>{
+                        if(client != undefined && client.id === id)
+                        {
+                            room.clients.splice(index, 1);
+                        }
+                    })
+                })
+
+                //delete room if aren't contacts
+                for(var i=0; i<rooms.length; i++)
+                {
+                    if(rooms[i].clients.length == 0){
+                        rooms.slice(i, 1)
+                    }
                 }
             }
             //remove client
