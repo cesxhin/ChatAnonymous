@@ -82,6 +82,7 @@ import VuexStore from './store'
 //components
 import rowChatComponents from './components/rowChatComponent.vue';
 import chatComponents from './components/chatComponent.vue';
+import console from "./utilities/logger"
 
 export default {
     name: "App",
