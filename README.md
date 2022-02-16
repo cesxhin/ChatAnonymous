@@ -7,6 +7,15 @@ Il progetto si suddivide in 3 progetti:
 - 🖥️Web Socket (hapi)
 - 🧱Gateway Proxy (Nodejs)
 
+## 📄Web
+Questo progetto verrà utilizzato per gli utenti normali per usare le chat
+
+## 🖥️Web Socket
+Questo progetto verrà utilizzato per scambiare i messaggi tra gli utenti e gestione utenti
+
+## 🧱Gateway Proxy
+Questo progetto permette di usare unico endpoint che verrà esposto pubblicamente per contattare sia web e web socket
+
 ## Installation
 Installare Nodejs e npm poi installare tutte le sue dipendenze per ogni progetto
 ```sh
