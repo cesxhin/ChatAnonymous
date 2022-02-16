@@ -67,7 +67,7 @@
 .registration{
   margin: 0% 30%;
   padding: 10px;
-  background-color: rgb(235, 245, 223);
+  background-color: rgb(212, 212, 212);
   border-radius: 10px;
   text-align: center;
 }

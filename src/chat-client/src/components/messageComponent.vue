@@ -59,6 +59,6 @@
     text-align: end;
 }
 .left{
-    background-color: rgb(111, 154, 149);
+    background-color: rgb(148, 146, 146);
 }
 </style>

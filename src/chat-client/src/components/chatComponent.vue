@@ -14,7 +14,7 @@
         </div>
         <div class="d-flex">
             <input v-model="body" @keypress="keyHandler($event)" class="form-control me-2" type="text" placeholder="Text...">
-            <button @click="sendMessage" class="btn btn-outline-success">Send</button>
+            <button @click="sendMessage" class="btn btn-outline-primary">Send</button>
       </div>
     </div>
 </template>
@@ -22,7 +22,7 @@
 .form{
     max-width: 100%;
     margin: 0px 10px;
-    background-color: rgb(235, 245, 223);
+    background-color: rgb(212, 212, 212);
     border-radius: 10px;
     padding: 10px;
 }
@@ -50,7 +50,7 @@ import messageComponent from "./messageComponent.vue"
         },
         methods:{
             keyHandler(event){
-                if(event.code === 'Enter')
+                if(event.code === 'Enter' || event.code === 'NumpadEnter')
                     this.sendMessage()
             },
             sendMessage(){
