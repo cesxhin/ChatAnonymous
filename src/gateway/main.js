@@ -6,4 +6,4 @@ const app = express();
 
 app.use(process.env.PATH_URL_PROXY_SOCKET, createProxyMiddleware(process.env.URL_SOCKET, {changeOrigin: true}));
 app.use(process.env.PATH_URL_PROXY_APP, createProxyMiddleware({ target: process.env.URL_APP, changeOrigin: true}));
-app.listen(5000);
+app.listen(process.env.PATH_PORT_GATEWAY_PROXY);
