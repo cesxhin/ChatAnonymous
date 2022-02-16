@@ -65,8 +65,10 @@
 }
 
 .registration{
-  margin: 0% 30%;
+  width: 400px;
   padding: 10px;
+  margin-left: auto;
+  margin-right: auto;
   background-color: rgb(212, 212, 212);
   border-radius: 10px;
   text-align: center;
