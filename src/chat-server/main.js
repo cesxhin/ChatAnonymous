@@ -18,6 +18,8 @@ require('dotenv').config();
     console.log("Host: "+wss.options.host);
     console.log("Port: "+wss.options.port);
     console.log("Path: "+wss.options.path);
+
+    //variables global
     const clients = new Map();
 
     //rooms
@@ -47,51 +49,12 @@ require('dotenv').config();
             if(dataJson.action === 'pong'){
                 //nothing
             }else if(dataJson.action === 'registration'){//registration
-                const client = {
-                    id: clients.get(ws),
-                    nickname: dataJson.nickname
-                }
-                
-                //room
-                var insert_done = false
-                var id_room_client = null;
-                do
-                {
-
-                    //try insert
-                    for(var i=0; i<rooms.length; i++)
-                    {
-                        if(rooms[i].clients.length < MAX_NUMBER_CLIETNS_ROOM)
-                        {
-                            id_room_client = rooms[i].id_room
-                            rooms[i].clients.push(client)
-                            insert_done = true
-                            break
-                        }
-                    }
-
-                    //check
-                    if(rooms.length <= 0 || insert_done == false)
-                    {
-                        id_room_client = uuid.v4()
-                        rooms.push({
-                            id_room:id_room_client,
-                            clients:[]
-                        })
-                    }
-                }while(insert_done == false)
+                var id_room_client = insertIntoRoom(ws, dataJson.nickname)
 
                 //send confirm registration
                 ws.send(JSON.stringify({action: 'registration', id:clients.get(ws), nickname: dataJson.nickname}))
-                
-                //sent other contacts for room
-                const room = rooms.find(element => element.id_room === id_room_client)
-                room.clients.forEach(item =>{
-                    const ws = [...clients].find(([key, val]) => val == item.id)[0]
-                    const find = room.clients.find(element => element.id === item.id) || null
-                    if(find != null)
-                        ws.send(JSON.stringify({action: 'UpdateRoom', room}))
-                })
+                alertNewMember(id_room_client)
+
             }else if(dataJson.action === 'send'){
                 console.log('un messagio da inoltrare')
                 console.log(dataJson)
@@ -106,49 +69,9 @@ require('dotenv').config();
             var id = clients.get(ws)
 
             //find id room
-            var id_room_client = null
-            for(var i=0; i<rooms.length; i++)
-            {
-                const find = rooms[i].clients.find(element => element.id === id) || null
-                    if(find != null)
-                    {
-                        id_room_client=rooms[i].id_room
-                        break
-                    }
-            }
-            //if this user not exist in rooms
-            if(id_room_client != undefined)
-            {
-                //get class room            
-                const room = rooms.find(element => element.id_room === id_room_client)
+            var id_room_client = getIdRoomByIdClient(id)
+            removeClientIntoRoom(id_room_client, id)
 
-                room.clients.forEach(item =>{
-                    const ws = [...clients].find(([key, val]) => val == item.id)[0]
-                    const find = room.clients.find(element => element.id !== id) || null
-
-                    //send clients that one client is closed
-                    if(find != null)
-                        ws.send(JSON.stringify({action: 'deleteContactFromRoom', id}))
-                })
-
-                //delete client
-                rooms.forEach((room )=>{
-                    room.clients.find((client, index)=>{
-                        if(client != undefined && client.id === id)
-                        {
-                            room.clients.splice(index, 1);
-                        }
-                    })
-                })
-
-                //delete room if aren't contacts
-                for(var i=0; i<rooms.length; i++)
-                {
-                    if(rooms[i].clients.length == 0){
-                        rooms.slice(i, 1)
-                    }
-                }
-            }
             //remove client
             clients.delete(ws);
 
@@ -156,8 +79,111 @@ require('dotenv').config();
             console.log(clients);
         });
     })
+
+    //methods
+    function getIdRoomByIdClient(id){
+        var id_room_client = null
+        for(var i=0; i<rooms.length; i++)
+        {
+            const find = rooms[i].clients.find(element => element.id === id) || null
+            if(find != null)
+            {
+                id_room_client=rooms[i].id_room
+                break
+            }
+        }
+        return id_room_client;
+    }
+
+    function removeClientIntoRoom(idRoom, id)
+    {
+        //if this user not exist in rooms
+        if(idRoom != undefined)
+        {
+            //get class room            
+            const room = rooms.find(element => element.id_room === idRoom)
+
+            room.clients.forEach(item =>{
+                const ws = [...clients].find(([key, val]) => val == item.id)[0]
+                const find = room.clients.find(element => element.id !== id) || null
+
+                //send clients that one client is closed
+                if(find != null)
+                    ws.send(JSON.stringify({action: 'deleteContactFromRoom', id}))
+            })
+
+            //delete client
+            rooms.forEach((room )=>{
+                room.clients.find((client, index)=>{
+                    if(client != undefined && client.id === id)
+                    {
+                        room.clients.splice(index, 1);
+                    }
+                })
+            })
+
+            //delete room if aren't contacts
+            for(var i=0; i<rooms.length; i++)
+            {
+                if(rooms[i].clients.length == 0){
+                    rooms.slice(i, 1)
+                }
+            }
+        }
+    }
+
+    function insertIntoRoom(ws, nickname){
+        const client = {
+            id: clients.get(ws),
+            nickname: nickname
+        }
+        
+        //room
+        var insert_done = false
+        var id_room_client = null;
+        do
+        {
+
+            //try insert
+            for(var i=0; i<rooms.length; i++)
+            {
+                if(rooms[i].clients.length < MAX_NUMBER_CLIETNS_ROOM)
+                {
+                    id_room_client = rooms[i].id_room
+                    rooms[i].clients.push(client)
+                    insert_done = true
+                    break
+                }
+            }
+
+            //check
+            if(rooms.length <= 0 || insert_done == false)
+            {
+                id_room_client = uuid.v4()
+                rooms.push({
+                    id_room:id_room_client,
+                    clients:[]
+                })
+            }
+        }while(insert_done == false)
+        return id_room_client
+    }
+    
+    function alertNewMember(id_room_client){
+        //sent other contacts for room
+        const room = rooms.find(element => element.id_room === id_room_client)
+        room.clients.forEach(item =>{
+            const ws = [...clients].find(([key, val]) => val == item.id)[0]
+            const find = room.clients.find(element => element.id === item.id) || null
+            if(find != null)
+                ws.send(JSON.stringify({action: 'UpdateRoom', room}))
+        })
+    }
+
     /*  start the HAPI service  */
     //await server.start()
+
+    //schedule
     const job = schedule.scheduleJob('*/5 * * * *', function(){
         clients.forEach(client_id => {
             const ws = [...clients].find(([key, val]) => val == client_id)[0]
