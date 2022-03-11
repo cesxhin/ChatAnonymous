@@ -28,6 +28,7 @@
         <div class="flex">
           <template v-if="getClients.length > 1">
             <div class="list-contacts">
+              <button @click="changeRoom()" class="btn btn-danger">Change Room</button>
               <div class="list-group" id="list-tab" role="tablist" v-for="chat in getClients" :key="chat.id">
                 <template v-if="chat.id !== getId">
                   <rowChat :notread="getNotRead(chat.id)" :nicknameContact="chat.nickname" :idContact="chat.id" :idContactCurrent="getIdContactCurrent"/>
@@ -103,6 +104,11 @@ export default {
           var data = {action: 'registration', nickname: this.RegistrationNickname}
           this.connection.send(JSON.stringify(data));
           console.log('Send request registraion!')
+      },
+      changeRoom(){
+        var data = {action: 'changeRoom', nickname: this.RegistrationNickname}
+        console.log(data);
+        this.connection.send(JSON.stringify(data))
       }
     },
     created() {

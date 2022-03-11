@@ -62,6 +62,15 @@ require('dotenv').config();
                 const wsContact = [...clients].find(([key, val]) => val == dataJson.data.idContact)[0]
                 const data = dataJson.data
                 wsContact.send(JSON.stringify({action:'receive', data}))
+            }else if(dataJson.action === 'changeRoom'){
+                var id = clients.get(ws)
+
+                //find id room
+                var id_room_client = getIdRoomByIdClient(id)
+                removeClientIntoRoom(id_room_client, id)
+
+                var id_room_client = insertIntoRoom(ws, dataJson.nickname, id_room_client)
+                alertNewMember(id_room_client)
             }
         })
 
@@ -148,6 +157,43 @@ require('dotenv').config();
             for(var i=0; i<rooms.length; i++)
             {
                 if(rooms[i].clients.length < MAX_NUMBER_CLIETNS_ROOM)
+                {
+                    id_room_client = rooms[i].id_room
+                    rooms[i].clients.push(client)
+                    insert_done = true
+                    break
+                }
+            }
+
+            //check
+            if(rooms.length <= 0 || insert_done == false)
+            {
+                id_room_client = uuid.v4()
+                rooms.push({
+                    id_room:id_room_client,
+                    clients:[]
+                })
+            }
+        }while(insert_done == false)
+        return id_room_client
+    }
+
+    function insertIntoRoom(ws, nickname, ignoreIdRoom){
+        const client = {
+            id: clients.get(ws),
+            nickname: nickname
+        }
+        
+        //room
+        var insert_done = false
+        var id_room_client = null;
+        do
+        {
+
+            //try insert
+            for(var i=0; i<rooms.length; i++)
+            {
+                if(rooms[i].clients.length < MAX_NUMBER_CLIETNS_ROOM && rooms[i].id_room != ignoreIdRoom)
                 {
                     id_room_client = rooms[i].id_room
                     rooms[i].clients.push(client)
