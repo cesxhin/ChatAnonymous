@@ -114,8 +114,13 @@ export default {
       this.connection.onopen = function () {
           console.log("Successfully connected to the echo WebSocket Server");
       };
-
-      this.connection.onmessage = function (event) {
+      
+      const emitter = this.emitter
+      this.connection.onmessage = function(event){
+        emitter.emit('socket-message', event);
+      }
+      
+      this.emitter.on('socket-message', (event)=>{
           console.log("Un messaggio arrivato: ");
           console.log(event.data)
 
@@ -138,8 +143,11 @@ export default {
           }else if(dataJson.action === 'deleteContactFromRoom'){
             console.log(dataJson);
             VuexStore.dispatch('deleteContactFromRoom', dataJson.id)
+          }else if(dataJson.action === 'ping'){
+            console.log('ping pong');
+            this.connection.send(JSON.stringify({action:"pong"}))
           }
-      };
+      });
 
       //eventBus
       this.emitter.on('change-chat', (id)=>{
