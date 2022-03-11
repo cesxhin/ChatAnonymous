@@ -2,6 +2,8 @@ const Boom          = require("@hapi/boom")
 const HAPI          = require("@hapi/hapi")
 const WebSocket     = require('ws');
 const uuid          = require('uuid');
+const schedule      = require('node-schedule');
+
 require('dotenv').config();
 ;(async () => {
     /*  create new HAPI service  */
@@ -42,8 +44,9 @@ require('dotenv').config();
 
         ws.on('message', (message)=>{
             var dataJson = JSON.parse(message)
-            //registration
-            if(dataJson.action === 'registration'){
+            if(dataJson.action === 'pong'){
+                //nothing
+            }else if(dataJson.action === 'registration'){//registration
                 const client = {
                     id: clients.get(ws),
                     nickname: dataJson.nickname
@@ -155,6 +158,12 @@ require('dotenv').config();
     })
     /*  start the HAPI service  */
     //await server.start()
+    const job = schedule.scheduleJob('*/5 * * * *', function(){
+        clients.forEach(client_id => {
+            const ws = [...clients].find(([key, val]) => val == client_id)[0]
+            ws.send(JSON.stringify({action:"ping"}))
+        });
+    });
 })().catch((err) => {
     console.log(`ERROR: ${err}`)
 })
