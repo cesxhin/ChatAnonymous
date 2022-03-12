@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 12/03/2022
+### Added
+- Change room
+- Notification if you don't already read the messagges
+
+### Changed
+- Colors chat
+- Icon and Title of the browser
+
+### Fixed
+- Add ping pong for alive connection between sockets
+
 ## [0.1.0] - 14/02/2022
 ### Added
 - Add managment rooms

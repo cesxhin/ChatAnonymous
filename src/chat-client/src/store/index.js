@@ -13,7 +13,7 @@ chats:[
     id:String from
     idContact:String to
     time:Date,
-    body:String
+    messagges:Array
   }
 ]
 */
@@ -47,6 +47,8 @@ export default createStore({
           if(state.chats[i].id === data.id){
             console.log('find!')
             state.chats[i].messages.push(data)
+            if(state.idContactCurrent !== data.id)
+              state.chats[i].notread += 1
             foundIdContact = true
           }
         }
@@ -60,6 +62,9 @@ export default createStore({
           if(item.id === id)
           {
             item.messages.push(data)
+            item.notread = 0
+            if(state.idContactCurrent !== id)
+              item.notread += 1
             console.log('Ok! create it!')
           }
         })
@@ -86,6 +91,7 @@ export default createStore({
         state.chats.map(item => {
           if(item.id === idContact)
           {
+            item.notread = 0
             item.messages.push(data)
             console.log('Ok! create it!')
           }
@@ -116,6 +122,13 @@ export default createStore({
         }
         ++pos
       })
+    },
+    RESET_NOTREAD(state, id){
+      state.chats.forEach(chat => {
+        if(chat.id === id){
+          chat.notread = 0
+        }
+      });
     }
   },
   actions: {
@@ -139,6 +152,9 @@ export default createStore({
     },
     deleteContactFromRoom(context, id){
       context.commit('DELETE_CONTACT_ROOM', id)
+    },
+    resetNotRead(context, id){
+      context.commit('RESET_NOTREAD', id)
     }
   },
   modules: {
@@ -161,6 +177,16 @@ export default createStore({
     },
     getChatById(state){
       return state.chats.find(item => item.id === state.idContactCurrent)
+    },
+    getNotRead(state){
+      var list = new Map();
+      state.room.clients.forEach(client => {
+        var temp = state.chats.find(item => item.id === client['id'])
+        if(temp != undefined && 'notread' in temp){
+          list.set(temp.id,temp.notread)
+        }
+      });
+      return list
     }
   }
 })

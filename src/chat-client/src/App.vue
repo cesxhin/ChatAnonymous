@@ -28,9 +28,10 @@
         <div class="flex">
           <template v-if="getClients.length > 1">
             <div class="list-contacts">
+              <button @click="changeRoom()" class="btn btn-danger">Change Room</button>
               <div class="list-group" id="list-tab" role="tablist" v-for="chat in getClients" :key="chat.id">
                 <template v-if="chat.id !== getId">
-                  <rowChat :nicknameContact="chat.nickname" :idContact="chat.id" :idContactCurrent="getIdContactCurrent"/>
+                  <rowChat :notread="getNotRead(chat.id)" :nicknameContact="chat.nickname" :idContact="chat.id" :idContactCurrent="getIdContactCurrent"/>
                 </template>
               </div>
             </div>
@@ -40,11 +41,11 @@
           </template>
           <template v-else>
             <div class="container text-center">
-              <h4>Sei da solo...aspetta qualcosa che si unisca con te!</h4>
+              <h4>Sei da solo...aspetta qualcuno che si unisca con te!</h4>
             </div>
           </template>
         </div>
-      </template> 
+      </template>
     </div>
   </div>
 </template>
@@ -103,6 +104,11 @@ export default {
           var data = {action: 'registration', nickname: this.RegistrationNickname}
           this.connection.send(JSON.stringify(data));
           console.log('Send request registraion!')
+      },
+      changeRoom(){
+        var data = {action: 'changeRoom', nickname: this.RegistrationNickname}
+        console.log(data);
+        this.connection.send(JSON.stringify(data))
       }
     },
     created() {
@@ -114,8 +120,13 @@ export default {
       this.connection.onopen = function () {
           console.log("Successfully connected to the echo WebSocket Server");
       };
-
-      this.connection.onmessage = function (event) {
+      
+      const emitter = this.emitter
+      this.connection.onmessage = function(event){
+        emitter.emit('socket-message', event);
+      }
+      
+      this.emitter.on('socket-message', (event)=>{
           console.log("Un messaggio arrivato: ");
           console.log(event.data)
 
@@ -138,13 +149,21 @@ export default {
           }else if(dataJson.action === 'deleteContactFromRoom'){
             console.log(dataJson);
             VuexStore.dispatch('deleteContactFromRoom', dataJson.id)
+          }else if(dataJson.action === 'ping'){
+            console.log('ping pong');
+            this.connection.send(JSON.stringify({action:"pong"}))
           }
-      };
+      });
 
       //eventBus
       this.emitter.on('change-chat', (id)=>{
           console.log('change-chat id:'+id)
           VuexStore.dispatch('changeChat', id);
+      });
+      
+      this.emitter.on('reset-notread', (id)=>{
+          console.log('reset-notread id:'+id)
+          VuexStore.dispatch('resetNotRead', id);
       });
 
       this.emitter.on('send-message', (data)=>{
@@ -188,6 +207,14 @@ export default {
       //get chat with inside messages by selected contact
       getChatById(){
         return VuexStore.getters.getChatById
+      },
+
+      //get number not read messagges
+      getNotRead(){
+        return id => {
+          var temp = VuexStore.getters.getNotRead
+          return temp.get(id)
+        }
       }
     },
     /* watch:{

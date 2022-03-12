@@ -55,10 +55,10 @@
     word-wrap: break-word;
 }
 .right{
-    background-color: rgb(111, 134, 149);
+    background-color: rgb(37, 150, 190);
     text-align: end;
 }
 .left{
-    background-color: rgb(148, 146, 146);
+    background-color: rgb(190, 77, 37);
 }
 </style>
